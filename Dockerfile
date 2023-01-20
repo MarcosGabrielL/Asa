@@ -8,6 +8,6 @@ RUN sed -i 's/\r$//' mvnw
 #RUN /bin/sh ./mvnw dependency:go-offline
  
 COPY src ./src
-COPY src/main/resources/application.properties.properties  ./src/main/resources/application.properties
+COPY src/main/resources/application.properties  ./src/main/resources/application.properties
 
 CMD ["./mvnw", "spring-boot:run"]
