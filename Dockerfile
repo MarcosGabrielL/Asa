@@ -1,11 +1,17 @@
-ENV JAVA_VERSION 8u31
-ENV BUILD_VERSION b13
-# Upgrading system
-RUN yum -y upgrade
-RUN yum -y install wget
-# Downloading & Config Java 8
-RUN wget – no-cookies – no-check-certificate – header "Cookie: oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/$JAVA_VERSION-$BUILD_VERSION/jdk-$JAVA_VERSION-linux-x64.rpm" -O /tmp/jdk-8-linux-x64.rpm
-RUN yum -y install /tmp/jdk-8-linux-x64.rpm
-RUN alternatives – install /usr/bin/java jar /usr/java/latest/bin/java 200000
-RUN alternatives – install /usr/bin/javaws javaws /usr/java/latest/bin/javaws 200000
-RUN alternatives – install /usr/bin/javac javac /usr/java/latest/bin/javac 200000
+# https://spring.io/guides/gs/spring-boot-docker/
+
+FROM openjdk:11-jdk-alpine
+
+WORKDIR /usr/src/app
+
+COPY . .
+
+# Run as non-root
+RUN addgroup -g 1001 -S appuser && adduser -u 1001 -S appuser -G appuser
+# RUN mkdir /logs && chown -R 1001:1001 /logs
+RUN chown -R 1001:1001 /usr/src/app
+USER 1001
+
+RUN ./mvn package
+
+ENTRYPOINT ["java","-jar","/usr/src/app/target/demo-0.0.1-SNAPSHOT.jar"]
