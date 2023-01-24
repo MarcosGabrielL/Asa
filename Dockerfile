@@ -5,6 +5,7 @@ WORKDIR /usr/src/app
 
 COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
+RUN chmod +x mvnw
 RUN sed -i 's/\r$//' mvnw
 #RUN /bin/sh ./mvnw dependency:go-offline
 
@@ -13,6 +14,6 @@ ENV TZ=America/Bahia
 
 COPY src ./src
 COPY src/main/resources/application.properties  ./src/main/resources/application.properties
-RUN chmod +x mvnw
+
 CMD ["./mvnw", "spring-boot:run"]
 
