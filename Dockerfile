@@ -1,13 +1,15 @@
-FROM openjdk:8-jdk-alpine
- 
-WORKDIR /usr/src/app
- 
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN sed -i 's/\r$//' mvnw
-#RUN /bin/sh ./mvnw dependency:go-offline
- 
-COPY src ./src
-COPY src/main/resources/application.properties  ./src/main/resources/application.properties
+FROM openjdk:11-jdk-alpine
 
-CMD ["./mvnw", "spring-boot:run"]
+WORKDIR /usr/src/app
+
+COPY . .
+
+# Run as non-root
+RUN addgroup -g 1001 -S appuser && adduser -u 1001 -S appuser -G appuser
+# RUN mkdir /logs && chown -R 1001:1001 /logs
+RUN chown -R 1001:1001 /usr/src/app
+USER 1001
+
+RUN ./mvn package
+
+ENTRYPOINT ["java","-jar","/usr/src/app/target/AsaSpring-0.0.1-SNAPSHOT.jar"]
