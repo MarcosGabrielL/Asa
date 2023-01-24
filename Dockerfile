@@ -12,7 +12,7 @@ RUN apk add --no-cache tzdata
 ENV TZ=America/Bahia
 
 COPY src ./src
-COPY src/main/resources/application.properties.prod  ./src/main/resources/application.properties
+COPY src/main/resources/application.properties  ./src/main/resources/application.properties
 RUN chmod +x mvnw
 CMD ["./mvnw", "spring-boot:run"]
 
